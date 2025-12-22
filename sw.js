@@ -1,11 +1,12 @@
 // Vibe Quest Service Worker
-// Version 1.0.0
+// Version 1.0.1
 
-const CACHE_NAME = 'vibequest-v1.0.0';
+const CACHE_NAME = 'vibequest-v1.0.1';
+
+// Only cache files that definitely exist
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/manifest.json'
+    './',
+    './index.html'
 ];
 
 // Install event - cache core files
@@ -15,11 +16,21 @@ self.addEventListener('install', event => {
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('[ServiceWorker] Caching app shell');
-                return cache.addAll(urlsToCache);
+                // Use addAll with error handling
+                return Promise.all(
+                    urlsToCache.map(url => {
+                        return cache.add(url).catch(err => {
+                            console.warn('[ServiceWorker] Failed to cache:', url, err);
+                        });
+                    })
+                );
             })
             .then(() => {
                 console.log('[ServiceWorker] Install complete');
                 return self.skipWaiting();
+            })
+            .catch(err => {
+                console.error('[ServiceWorker] Install failed:', err);
             })
     );
 });
@@ -58,16 +69,14 @@ self.addEventListener('fetch', event => {
             .then(response => {
                 // Return cached version if available
                 if (response) {
-                    console.log('[ServiceWorker] Serving from cache:', event.request.url);
                     return response;
                 }
 
                 // Otherwise fetch from network
-                console.log('[ServiceWorker] Fetching from network:', event.request.url);
                 return fetch(event.request)
                     .then(response => {
                         // Don't cache if not a valid response
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
+                        if (!response || response.status !== 200) {
                             return response;
                         }
 
@@ -85,18 +94,7 @@ self.addEventListener('fetch', event => {
             })
             .catch(() => {
                 // If both cache and network fail, show offline message
-                console.log('[ServiceWorker] Fetch failed, returning offline page');
-                return new Response(
-                    '<html><body><h1>Offline</h1><p>Vibe Quest requires an internet connection for first load.</p></body></html>',
-                    { headers: { 'Content-Type': 'text/html' } }
-                );
+                console.log('[ServiceWorker] Fetch failed');
             })
     );
-});
-
-// Handle messages from the main app
-self.addEventListener('message', event => {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-        self.skipWaiting();
-    }
 });
