@@ -1,0 +1,99 @@
+{
+    "name": "Vibe Quest",
+    "short_name": "Vibe Quest",
+    "description": "A retro RPG adventure inspired by classic NES games. Explore a fog-shrouded kingdom, battle monsters, complete quests, and defeat the Dragon to save the realm!",
+    "start_url": "/index.html",
+    "scope": "/",
+    "display": "fullscreen",
+    "orientation": "any",
+    "background_color": "#1a1a2e",
+    "theme_color": "#1a1a2e",
+    "categories": ["games", "entertainment"],
+    "lang": "en",
+    "dir": "ltr",
+    "icons": [
+	{
+            "src": "icons/icon-48x48.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+
+        {
+            "src": "icons/icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "screenshots/screenshot-gameplay.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Explore the Kingdom of Vibe"
+        },
+        {
+            "src": "screenshots/screenshot-combat.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Battle Monsters in Turn-Based Combat"
+        }
+	{
+            "src": "screenshots/screenshot-quests.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Complete Quests"
+        },
+	{
+            "src": "screenshots/screenshot-craft.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Craft Weapons and Armor"
+        },
+	{
+            "src": "screenshots/screenshot-equipment.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Wield Mighty Equipment"
+        },
+	{
+            "src": "screenshots/screenshot-status.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Content With Enemy Status Effects"
+        },
+    ],
+    "related_applications": [],
+    "prefer_related_applications": false
+}
