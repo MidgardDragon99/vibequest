@@ -72,7 +72,7 @@
         },
         {
             "src": "screenshots/screenshot-gameplay.png",
-            "sizes": "869x769",
+            "sizes": "862x739",
             "type": "image/png",
             "form_factor": "narrow",
             "label": "Explore the Kingdom of Vibe"
@@ -100,7 +100,7 @@
         },
         {
             "src": "screenshots/screenshot-equipment.png",
-            "sizes": "852x717",
+            "sizes": "869x769",
             "type": "image/png",
             "form_factor": "narrow",
             "label": "Wield Mighty Equipment"
