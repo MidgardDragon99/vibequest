@@ -2,7 +2,7 @@
       "relation": ["delegate_permission/common.handle_all_urls"],
       "target": {
         "namespace": "android_app",
-        "package_name": "io.github.midgarddragon99.twa",
+        "package_name": "com.midgarddragon99.vibequest",
         "sha256_cert_fingerprints": ["61:B4:10:1D:7A:20:47:87:08:8B:09:45:68:34:F8:AD:BB:D6:DC:B8:A5:BD:30:F2:2B:03:22:9E:62:B9:6A:E2"]
       }
     }]
