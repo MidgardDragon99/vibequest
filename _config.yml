@@ -1,1 +1,5 @@
 include: [".well-known"]
+include: ["icons"]
+include: ["screenshots"]
+include: ["favicon.ico"]
+include: [/]
