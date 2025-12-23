@@ -3,6 +3,6 @@
       "target": {
         "namespace": "android_app",
         "package_name": "io.github.midgarddragon99.twa",
-        "sha256_cert_fingerprints": ["B1:88:72:37:21:CE:09:83:27:52:62:3F:FD:84:A9:A2:81:62:1E:03:89:E5:26:DE:A5:FC:49:E7:CF:E8:53:9D"]
+        "sha256_cert_fingerprints": ["61:B4:10:1D:7A:20:47:87:08:8B:09:45:68:34:F8:AD:BB:D6:DC:B8:A5:BD:30:F2:2B:03:22:9E:62:B9:6A:E2"]
       }
     }]
