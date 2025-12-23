@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.midgarddragon99.twa",
+        "sha256_cert_fingerprints": ["B1:88:72:37:21:CE:09:83:27:52:62:3F:FD:84:A9:A2:81:62:1E:03:89:E5:26:DE:A5:FC:49:E7:CF:E8:53:9D"]
+      }
+    }]
