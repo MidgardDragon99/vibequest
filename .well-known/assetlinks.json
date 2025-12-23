@@ -3,10 +3,9 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "com.example.your.app.package",
-      "sha256_cert_fingerprints": [
-        "97:72:7E:00:F5:27:87:8D:4F:0B:64:97:83:32:4E:93:34:24:55:AB:79:E9:92:9A:38:3E:8B:FA:67:54:25:36"
-      ]
+      "package_name": "com.midgarddragon99.vibequest",
+      "sha256_cert_fingerprints":
+        ["AB:22:6C:F7:3A:0F:73:06:46:7B:F8:BD:7D:86:11:AB:1A:87:2D:F5:6C:F5:AF:2A:67:55:DC:3D:0C:52:A3:F8"]
     }
   }
 ]
