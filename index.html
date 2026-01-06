@@ -1314,7 +1314,9 @@
         <div id="start-screen" class="overlay" style="display: flex;">
             <div class="vibe-emojis">🧙‍♂️ ✨ 🐉</div>
             <div class="vibe-title">VIBE QUEST</div>
-            <button class="quest-btn" id="start-btn" onclick="showWelcomeScreen()">QUEST</button>
+            <button class="quest-btn" id="continue-btn" onclick="continueGame()" style="display: none; margin-bottom: 10px; background: #27ae60;">CONTINUE</button>
+            <div id="save-info" style="display: none; color: #7f8c8d; font-size: 0.85rem; margin-bottom: 15px;"></div>
+            <button class="quest-btn" id="start-btn" onclick="newGame()">NEW QUEST</button>
         </div>
 
         <div id="welcome-screen" class="overlay" style="display: none;">
@@ -1402,7 +1404,10 @@
         <div id="items-menu" class="craft-items"></div>
     </div>
 
-    <button class="close-btn" onclick="closeInventory()">Close Bag (ESC)</button>
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+        <button class="close-btn" onclick="showManualSaveConfirm()" style="background: #27ae60; border-color: #2ecc71;">💾 Save Game</button>
+        <button class="close-btn" onclick="closeInventory()">Close Bag (ESC)</button>
+    </div>
 </div>
 
         <div id="worldmap-screen" class="overlay">
@@ -2849,6 +2854,7 @@ else if (gameState === 'CAMPFIRE') {
             worldMaps[`${worldX},${worldY}`] = map;
             worldX = nx; worldY = ny;
             loadScreen(dx, dy);
+            autoSave(); // Auto-save when entering new area
         }
 
         /* --- MAP GENERATION --- */
@@ -3235,6 +3241,7 @@ function restAtCampfireAndCraft() {
     updateUI();
     renderMap();
     renderCampfireMenu(); // Re-render to update rest button state
+    autoSave(); // Auto-save after resting
 }
 
 function closeCampfireMenu() {
@@ -4852,6 +4859,7 @@ function throwItem(key) {
                 // Play victory fanfare
                 if (musicEnabled) playVictoryMusic();
                 endCombat(true);
+                autoSave(); // Auto-save after winning combat
             });
         }
 
@@ -5770,6 +5778,7 @@ function turnInQuest(questId) {
     showAlert(`📜 Quest Complete!\n\n"${quest.title}"\n\n${quest.giver.icon} ${quest.giver.name}:\n"Thank you, hero! Your kindness won't be forgotten."\n\n💰 +${quest.rewardGold} Gold\n🌟 +${quest.rewardXp} XP`);
     
     updateUI();
+    autoSave(); // Auto-save after completing quest
 }
 
 function openJournal() {
@@ -5968,6 +5977,7 @@ function acceptQuest() {
     // Exit house FIRST, then show alert so gameState is correct
     exitHouse();
     showAlert(`📜 Quest Accepted!\n\n"${quest.title}"\n\nCheck your Journal (📜) for details.`);
+    autoSave(); // Auto-save after accepting quest
 }
 
 function declineQuest() {
@@ -6171,6 +6181,7 @@ levelUpSpells = ['lightning','iceball','megaheal','bleed','cleanse','shatter','t
             gameState='MAP'; 
             updateUI();
             showAlert(`Learned ${SPELL_DB[k].name}!`);
+            autoSave(); // Auto-save after level up
         }
         
         function endGame(win) { 
@@ -6402,6 +6413,160 @@ function handleSwipe() {
 
 // Initialize mobile controls
 setupMobileControls();
+
+/* --- SAVE/LOAD SYSTEM --- */
+const SAVE_KEY = 'vibequest-save-v1';
+
+function saveGame() {
+    try {
+        const saveData = {
+            version: 1,
+            timestamp: Date.now(),
+            player: player,
+            worldX: worldX,
+            worldY: worldY,
+            worldMaps: worldMaps,
+            bossLoc: bossLoc,
+            castleLoc: castleLoc,
+            dragonDefeated: typeof dragonDefeated !== 'undefined' ? dragonDefeated : false,
+            shadowTriggered: player.shadowTriggered || false,
+            shadowDefeated: player.shadowDefeated || false
+        };
+        localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+        console.log('[Save] Game saved successfully');
+        return true;
+    } catch (e) {
+        console.error('[Save] Failed to save game:', e);
+        return false;
+    }
+}
+
+function loadGame() {
+    try {
+        const saved = localStorage.getItem(SAVE_KEY);
+        if (!saved) {
+            console.log('[Load] No save data found');
+            return false;
+        }
+        
+        const data = JSON.parse(saved);
+        
+        // Restore game state
+        player = data.player;
+        worldX = data.worldX;
+        worldY = data.worldY;
+        worldMaps = data.worldMaps;
+        bossLoc = data.bossLoc;
+        castleLoc = data.castleLoc;
+        
+        if (data.dragonDefeated) dragonDefeated = data.dragonDefeated;
+        if (data.shadowTriggered) player.shadowTriggered = data.shadowTriggered;
+        if (data.shadowDefeated) player.shadowDefeated = data.shadowDefeated;
+        
+        // Load current map
+        if (worldMaps[`${worldX},${worldY}`]) {
+            map = worldMaps[`${worldX},${worldY}`];
+        } else {
+            generateMapWithChecks();
+            worldMaps[`${worldX},${worldY}`] = map;
+        }
+        
+        console.log('[Load] Game loaded successfully');
+        return true;
+    } catch (e) {
+        console.error('[Load] Failed to load game:', e);
+        return false;
+    }
+}
+
+function hasSaveData() {
+    try {
+        return localStorage.getItem(SAVE_KEY) !== null;
+    } catch (e) {
+        return false;
+    }
+}
+
+function deleteSave() {
+    try {
+        localStorage.removeItem(SAVE_KEY);
+        console.log('[Save] Save data deleted');
+        return true;
+    } catch (e) {
+        console.error('[Save] Failed to delete save:', e);
+        return false;
+    }
+}
+
+function autoSave() {
+    if (gameState === 'MAP' || gameState === 'HOUSE' || gameState === 'INV') {
+        saveGame();
+    }
+}
+
+function getSaveInfo() {
+    try {
+        const saved = localStorage.getItem(SAVE_KEY);
+        if (!saved) return null;
+        const data = JSON.parse(saved);
+        return {
+            level: data.player.lvl,
+            gold: data.player.gold,
+            timestamp: data.timestamp,
+            date: new Date(data.timestamp).toLocaleDateString(),
+            time: new Date(data.timestamp).toLocaleTimeString()
+        };
+    } catch (e) {
+        return null;
+    }
+}
+
+function continueGame() {
+    if (loadGame()) {
+        document.getElementById('start-screen').style.display = 'none';
+        gameState = 'MAP';
+        updateFog();
+        renderMap();
+        updateUI();
+        initAudio();
+        if (musicEnabled) playOverworldMusic();
+        showAlert("💾 Game loaded!\n\nWelcome back, adventurer!");
+    } else {
+        showAlert("❌ Failed to load save data.");
+    }
+}
+
+function newGame() {
+    deleteSave();
+    showWelcomeScreen();
+}
+
+function showManualSaveConfirm() {
+    saveGame();
+    showAlert("💾 Game Saved!\n\nYour progress has been saved.");
+}
+
+// Update start screen with save info on load
+function updateStartScreen() {
+    const saveInfo = getSaveInfo();
+    const continueBtn = document.getElementById('continue-btn');
+    const saveInfoDiv = document.getElementById('save-info');
+    
+    if (saveInfo && continueBtn) {
+        continueBtn.style.display = 'block';
+        if (saveInfoDiv) {
+            saveInfoDiv.innerHTML = `Level ${saveInfo.level} • ${saveInfo.gold}g • ${saveInfo.date}`;
+            saveInfoDiv.style.display = 'block';
+        }
+    } else if (continueBtn) {
+        continueBtn.style.display = 'none';
+        if (saveInfoDiv) saveInfoDiv.style.display = 'none';
+    }
+}
+
+// Call on page load
+setTimeout(updateStartScreen, 100);
+
         initGame('RESET');
     </script>
 
